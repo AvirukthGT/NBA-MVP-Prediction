@@ -75,7 +75,7 @@ To evaluate how well the model ranks the top MVP candidates, I implemented a cus
 Unlike standard metrics like RMSE or R², this metric specifically measures how many of the **true top 5 MVPs (by voting share)** are ranked highly by the model's predictions. It is particularly useful when the goal is **ranking** rather than exact value prediction.
 
 ---
-## Custom Loss Function
+## Custom Loss Function(Named it AP@5)
 ### How It Works
 
 1. Sort players by actual MVP share and extract the **true top 5**.
