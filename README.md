@@ -185,3 +185,17 @@ Top 5 MVP Predictions for 2024:
 3. Joel Embiid
 4. Jayson Tatum
 5. Giannis Antetokounmpo
+```
+## Future Improvements
+- Add advanced stats like PER, BPM, WS
+- Use classification models to directly predict MVP
+- Integrate a Streamlit dashboard for interactivity
+
+## Acknowledgements
+- Data Source: Basketball-Reference
+- Libraries: pandas, sklearn, numpy, BeautifulSoup, selenium
+
+🧑‍💻 Author
+Created by Avirukth – Master of Data Science, Monash University
+
+
