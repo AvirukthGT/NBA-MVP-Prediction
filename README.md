@@ -5,14 +5,16 @@ This project aims to predict the NBA Most Valuable Player (MVP) using player and
 ---
 
 ## Project Structure
-nba-mvp-prediction/
-├── web_scraping.py         # Collects MVP voting, player stats, and team standings
-├── Data_cleaning.py        # Cleans and merges data from multiple sources
-├── prediction.py           # Builds regression models and evaluates prediction accuracy
-├── mvps.csv                # MVP voting data
-├── players.csv             # Player statistics
-├── teams.csv               # Team win/loss standings
-└── player_mvp_stats.csv    # Final merged dataset used for modeling
+
+| File / Folder           | Description                                               |
+|-------------------------|-----------------------------------------------------------|
+| `web_scraping.py`       | Collects MVP voting, player stats, and team standings     |
+| `Data_cleaning.py`      | Cleans and merges data from multiple sources              |
+| `prediction.py`         | Builds regression models and evaluates prediction accuracy|
+| `mvps.csv`              | MVP voting data                                           |
+| `players.csv`           | Player statistics                                         |
+| `teams.csv`             | Team win/loss standings                                   |
+| `player_mvp_stats.csv`  | Final merged dataset used for modeling                    |
 
 ---
 
@@ -116,6 +118,54 @@ def find_ap(combination):
     return sum(ps)/len(ps)
 
 ```
+## Time Series Evaluation: Backtesting with `backtest()`
+
+To ensure realistic and forward-looking MVP predictions, I used a **time series backtesting approach** rather than random cross-validation. This mimics how future MVP races would be predicted using only past data, respecting the chronological order of NBA seasons.
+
+### How It Works
+
+The `backtest()` function loops through each season (e.g., 1996 to 2024), and for every year:
+
+1. Trains the model on **all seasons prior to that year**
+2. Predicts MVP shares for players in the current year
+3. Evaluates the prediction using the custom **AP@5** metric
+4. Repeats for each year in the evaluation range
+
+This simulates how the model would have performed if it were deployed at the end of each regular season historically.
+
+---
+
+### Example: Backtest Ridge Regression
+```python
+def backtest(stats, model, years, predictors):
+    aps = []
+    all_predictions = []
+
+    for year in years:
+        train = stats[stats["Year"] < year]
+        test = stats[stats["Year"] == year]
+
+        model.fit(train[predictors], train["Share"])
+        predictions = model.predict(test[predictors])
+
+        combination = pd.concat([test[["Player", "Share"]], 
+                                 pd.DataFrame(predictions, columns=["predictions"], index=test.index)], axis=1)
+        combination = add_ranks(combination)
+
+        aps.append(average_precision_at_5(combination))
+        all_predictions.append(combination)
+
+    return sum(aps) / len(aps), aps, pd.concat(all_predictions)
+```
+
+```python
+from sklearn.linear_model import Ridge
+reg = Ridge(alpha=0.1)
+
+mean_ap, aps, all_predictions = backtest(stats, reg, years[5:], predictors)
+print("Mean AP@5:", round(mean_ap, 3))
+```
+
 
 ## Final Output
 
