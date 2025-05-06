@@ -4,15 +4,15 @@ This project aims to predict the NBA Most Valuable Player (MVP) using player and
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 nba-mvp-prediction/
-├── web_scraping.py # Collects MVP voting, player stats, and team standings
-├── Data_cleaning.py # Cleans and merges data from multiple sources
-├── prediction.py # Builds regression models and evaluates prediction accuracy
-├── mvps.csv # MVP voting data
-├── players.csv # Player statistics
-├── teams.csv # Team win/loss standings
-└── player_mvp_stats.csv # Final merged dataset used for modeling
+├── web_scraping.py         # Collects MVP voting, player stats, and team standings
+├── Data_cleaning.py        # Cleans and merges data from multiple sources
+├── prediction.py           # Builds regression models and evaluates prediction accuracy
+├── mvps.csv                # MVP voting data
+├── players.csv             # Player statistics
+├── teams.csv               # Team win/loss standings
+└── player_mvp_stats.csv    # Final merged dataset used for modeling
 
 ---
 
@@ -66,9 +66,9 @@ Key predictors include:
 | Random Forest        | Ensemble of regression trees        | **Improved**           |
 
 ---
-## 🧪 Custom Evaluation Metric: AP@5
 
-To evaluate how well the model ranks the top MVP candidates, we implemented a custom metric called **Average Precision at Top-5 (AP@5)**.
+
+To evaluate how well the model ranks the top MVP candidates, I implemented a custom metric called **Average Precision at Top-5 (AP@5)**.
 
 Unlike standard metrics like RMSE or R², this metric specifically measures how many of the **true top 5 MVPs (by voting share)** are ranked highly by the model's predictions. It is particularly useful when the goal is **ranking** rather than exact value prediction.
 
@@ -78,8 +78,8 @@ Unlike standard metrics like RMSE or R², this metric specifically measures how 
 
 1. Sort players by actual MVP share and extract the **true top 5**.
 2. Sort players by predicted share.
-3. As we iterate through the predicted list, we check whether the player is in the actual top 5.
-4. Each time a true top-5 player is found, we compute the **precision at that rank**.
+3. As I iterate through the predicted list, I check whether the player is in the actual top 5.
+4. Each time a true top-5 player is found, I compute the **precision at that rank**.
 5. The final score is the **average of these precision values**.
 
 A perfect score of **1.0** means all top 5 actual MVPs were perfectly ranked at the top by the model.
@@ -89,7 +89,7 @@ A perfect score of **1.0** means all top 5 actual MVPs were perfectly ranked at 
 ### Formula (Simplified)
 
 $$
-\text{AP@5} = \frac{1}{k} \sum_{i=1}^{n} \frac{\text{Correct Hits}}{\text{Rank}_i} \quad \text{(until k hits found)}
+\text{AP} = \frac{1}{k} \sum_{i=1}^{n} \frac{\text{Correct Hits}}{\text{Rank}_i} \quad \text{(until k hits found)}
 $$
 
 Where:
